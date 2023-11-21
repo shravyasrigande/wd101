@@ -1,54 +1,50 @@
-*{
-    background-color:black;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-* input,label{
-    color: white;
-}
-#thofuu{
-    line-height: 40px;
-}
-#thofuu{
-    padding-top: 80px;
-    padding-left: 700px;
-    font-size: medium;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    width: 500px;
-    height: 400px;
-
-}
-input{
-    padding-left: 30px;
-}
-#name label{
-    padding-left: 50px;
-}
-#data{
-    padding-top: none;
-    padding-left: 450px;
-    font-size: medium;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    height: 400px;
-    color: white;
-}
-#data td{
-    padding-left: 20px;
-}
-#thofuu label{
-    padding-right:40px;
-}
-button{
-    color: white;
-    background-color: green;
-    border-radius: 15px;
-    font-size: medium;
-    padding-left: 25px;
-    padding-right: 25px;
-}
-h2{
-    color: white;
-}
-button:hover{
-    color: white;
-    background-color: black;
-}
+document.addEventListener('DOMContentLoaded', function() {
+    loadSavedData();
+  });
+  
+  function validateForm() {
+    var name = document.getElementById('name').value;
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('password').value;
+    var dob = document.getElementById('dob').value;
+    var acceptTerms = document.getElementById('acceptTerms').checked;
+  
+    var today = new Date();
+    var birthDate = new Date(dob);
+    var age = today.getFullYear() - birthDate.getFullYear();
+  
+    if (age < 18 || age > 55) {
+      alert('You must be between 18 and 55 years old to register.');
+      return;
+    }
+    saveDataToStorage(name, email, password, dob, acceptTerms);
+    loadSavedData(); 
+  }
+  
+  function saveDataToStorage(name, email, password, dob, acceptTerms) {
+    var userData = {
+      name: name,
+      email: email,
+      password: password,
+      dob: dob,
+      acceptTerms: acceptTerms
+    };
+    localStorage.setItem('userData', JSON.stringify(userData));
+  }
+  
+  function loadSavedData() {
+    var userData = localStorage.getItem('userData');
+    var tableBody = document.querySelector('#userData tbody');
+    tableBody.innerHTML = '';
+  
+    if (userData) {
+      userData = JSON.parse(userData);
+      var newRow = document.createElement('tr');
+      newRow.innerHTML = `<td>${userData.name}</td>
+                          <td>${userData.email}</td>
+                          <td>${userData.password}</td>
+                          <td>${userData.dob}</td>
+                          <td>${userData.acceptTerms ? 'True' : 'False'}</td>`;
+      tableBody.appendChild(newRow);
+    }
+  }
